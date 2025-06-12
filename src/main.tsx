@@ -1,18 +1,26 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { TonConnectUIProvider } from "@tonconnect/ui-react";
-import ReactDOM from "react-dom/client";
-import App from "./App";
-import "./index.css";
-// this manifest is used temporarily for development purposes
-const manifestUrl =
-  "https://raw.githubusercontent.com/ton-community/tutorials/main/03-client/test/public/tonconnect-manifest.json";
+import ReactDOM from 'react-dom/client';
+import App from './App.tsx';
+import './index.css';
+import { TonConnectUIProvider } from '@tonconnect/ui-react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-const queryClient = new QueryClient({
-  defaultOptions: { queries: { refetchOnWindowFocus: false } },
-});
+// URL PRODUCTION CHÍNH XÁC CỦA BẠN
+const VERCEL_URL = 'https://my-first-ton-app.vercel.app';
 
-ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
- <TonConnectUIProvider manifestUrl="/tonconnect-manifest.json">
+// Tự động tạo manifest từ URL trên
+const manifest = {
+  url: VERCEL_URL,
+  name: 'KittyMint Game',
+  iconUrl: `${VERCEL_URL}/icon.png`,
+};
+
+// Tạo manifestUrl dưới dạng data URI để không cần dùng file .json riêng
+const manifestUrl = `data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(manifest))}`;
+
+const queryClient = new QueryClient();
+
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+  <TonConnectUIProvider manifestUrl={manifestUrl}>
     <QueryClientProvider client={queryClient}>
       <App />
     </QueryClientProvider>
